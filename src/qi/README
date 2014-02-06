@@ -1,0 +1,67 @@
+How are the go bindings made?
+
+They use the C bindings and cgo.
+
+Value are copied to/from GO/C.
+
+A typesystem should be registered for struct and interface.
+
+
+From qi to GO
+QI       : GO                       :  STATUS
+-------  |--------------------------|-----------------
+pod      : pod                      :  OK
+map<K,V> : [K]V                     :  OK
+list<V>  : []V                      :  OK
+tuple    : []interface{}            :  OK, could be type Foo struct
+struct   : [string]interface{}      :  OK, could be type Foo struct
+object   : AnyObject                :  OK, could be type Bar interface
+dynamic  : interface{}              :  OK
+
+should we convert all int/uint to int/uint (instead of more specific values?)
+
+from GO to QI
+POD          : POD
+map          : map
+slice/array  : list
+struct       : struct
+interface    : object
+
+Should we register some struct (TTSImpl) as implementing TTSManager interface?
+
+Should we register some struct as implementing struct?
+
+We can find all that with the expected signature.
+
+
+TODO:
+- Object in parameter
+- AnyObject for GoObject. (optimisation) (works going though C)
+- Variadic Arguments
+- Signal/Property for AnyObject
+- Structure / Tuple
+- signal: multisubscriber
+- CLEANUP!
+- Performance Test
+- Signature (remove them)
+- Kind ? UINT8/...
+
+
+TODO(future):
+- codegen
+
+
+
+ISSUES IN GO TO BE THE PERFECT LANGUAGE FOR ROBOTICS:
+- do not support signals. (they are not typed)   (introduce a signal at the same level as channel?)
+- := is pointless.  = is enough. go do not compile when there is unused variable.. so typo in the name are not an issue
+- Mutex: not using RAII. (no destructor in GO). if something panic les carottes sont cuites (sans defer)
+- WTF making map ? (make them for us stupid you)  (that's ok for slice because you can append to an empty slice)
+
+
+
+
+TODO (qi::SDK C++)
+- variadic (support min arg count ?  (A, B, ...)
+- clearout the issues with UINT*/INT*
+- remove signature. fucking signature
